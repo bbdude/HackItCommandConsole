@@ -22,8 +22,10 @@ using namespace System::Net;
 using namespace System::Text;
 //using namespace System::Data::Sql;
 using namespace msclr::interop;
+using namespace sql;
 
 enum MENUCOMMANDS {CHECKMISSION,CHECKSTATS,FINDOTHERMEMBERS,TOPAGENTS,HELP,RETYPE,EXIT};
+enum ECOMMANDS {ECOMMAND,EHACKING,EENCRYPTION,EDECRYPTION,EINTELLIGENCE,EGATHERINTEL,ETIMING,ESPEED,EPREDICTION,ETRACKING,EHIDING};
 
 string getBetween(string input,string startFind,string endFind)
 {
@@ -106,6 +108,33 @@ MENUCOMMANDS returnMenuCommands (std::string & inString) {
 		return RETYPE;
 	}
 }
+ECOMMANDS returnCommands(std::string &inString)
+{
+	if (inString == "eHacking")
+		return EHACKING;
+	else if (inString == "eEncryption" )
+		return EENCRYPTION;
+	else if (inString == "eDecryption" )
+		return EDECRYPTION;
+	else if (inString == "eIntelligence" )
+		return EINTELLIGENCE;
+	else if (inString == "eGatherIntel" )
+		return EGATHERINTEL;
+	else if (inString == "eTiming" )
+		return ETIMING;
+	else if (inString == "eSpeed" )
+		return ESPEED;
+	else if (inString == "ePrediction" )
+		return EPREDICTION;
+	else if (inString == "eTracking" )
+		return ETRACKING;
+	else if (inString == "eHiding" )
+		return EHIDING;
+	else
+	{
+		return ECOMMAND;
+	}
+}
 
 void drawBar()
 {
@@ -128,6 +157,104 @@ void collectStats(PlayerClass & player)
 	cout << "*Hiding: " << player.getHiding() << endl;
 	drawBar();
 	Sleep(5000);
+}
+void eCommandQuest()
+{
+	system("cls");
+	drawBar();
+	cout << "Today is your first mission" << endl << "We are going to go through each type of mission and completing each will grant you 1 level in that type" << endl;
+	drawBar();
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Encryption" << endl;
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Hacking" << endl;
+	cout << "The first mission is Hacking" << endl;
+}
+void eHackingQuest()
+{
+
+}
+void eEncryptionQuest()
+{
+
+}
+void eDecryptionQuest()
+{
+
+}
+void eIntelligenceQuest()
+{
+
+}
+void eGatherIntelQuest()
+{
+
+}
+void eTimingQuest()
+{
+
+}
+void eSpeedQuest()
+{
+
+}
+void ePredictionQuest()
+{
+
+}
+void eTrackingQuest()
+{
+
+}
+void eHidingQuest()
+{
+
+}
+void runQuest(int quest,string &type,string &skillType,float &skillValue)
+{
+	decryptQuest(collectQuest(quest),type,skillType,skillValue);
+	void (*questPointer)() = eCommandQuest;
+	switch(returnCommands(type))
+	{
+	case EHACKING:
+		questPointer = eHackingQuest;
+		break;
+	case EENCRYPTION:
+		questPointer = eEncryptionQuest;
+		break;
+	case EDECRYPTION:
+		questPointer = eDecryptionQuest;
+		break;
+	case EINTELLIGENCE:
+		questPointer = eIntelligenceQuest;
+		break;
+	case EGATHERINTEL:
+		questPointer = eGatherIntelQuest;
+		break;
+	case ETIMING:
+		questPointer = eTimingQuest;
+		break;
+	case ESPEED:
+		questPointer = eSpeedQuest;
+		break;
+	case EPREDICTION:
+		questPointer = ePredictionQuest;
+		break;
+	case ETRACKING:
+		questPointer = eTrackingQuest;
+		break;
+	case EHIDING:
+		questPointer = eHidingQuest;
+		break;
+	default:
+		questPointer = eCommandQuest;
+		break;
+	}
+	questPointer();
 }
 
 int collectAllQuests(string &type,string &skillType,float &skillValue)
@@ -168,8 +295,9 @@ int collectAllQuests(string &type,string &skillType,float &skillValue)
 		cin >> choice;
 
 		system("cls");
-	}while(choice <= index);
-	
+	}while(choice >= index);
+	if (choice != 0)
+		decryptQuest(collectQuest(choice),type,skillType,skillValue);
 	Sleep(500);
 
 	return choice;
@@ -200,7 +328,7 @@ int main(array<System::String ^> ^args)
 	bool firstTime = false;
 	string commandReader;
 	string password = "Dr@gonsBr3ath";
-		string readPass = "HiCc0mm@nd";
+	string readPass = "HiCc0mm@nd";
 	MENUCOMMANDS menuCommands;
 	menuCommands;
 	//Mission stuff
@@ -234,15 +362,22 @@ int main(array<System::String ^> ^args)
 			switch (returnMenuCommands(commandReader))
 			{
 			case CHECKMISSION:
+				{
 				system("cls");
 				drawBar();
 				cout << "Checking missions" << endl;
-				//decryptQuest(collectQuest(2),type,skillType,skillValue);
-				collectAllQuests(type,skillType,skillValue);
+
+				int mission = collectAllQuests(type,skillType,skillValue);
+				if (mission != 0)
+					runQuest(mission,type,skillType,skillValue);
+				cin.clear();
+				cin.ignore(1000, '\n');
 				drawBar();
 				Sleep(500);
 				break;
+				}
 			case CHECKSTATS:
+				{
 				system("cls");
 				drawBar();
 				cout << "Checking stats" << endl;
@@ -250,34 +385,48 @@ int main(array<System::String ^> ^args)
 				Sleep(500);
 				collectStats(player);
 				break;
+				}
 			case FINDOTHERMEMBERS:
+				{
 				system("cls");
 				drawBar();
 				cout << "Finding other members" << endl;
 				drawBar();
 				Sleep(500);
 				break;
+				}
 			case TOPAGENTS:
+				{
 				system("cls");
 				drawBar();
 				cout << "Finding top agents" << endl;
 				drawBar();
 				Sleep(500);
 				break;
+				}
 			case HELP:
+				{
 				system("cls");
 				drawBar();
 				cout << "Loading help" << endl;
 				drawBar();
 				Sleep(500);
 				break;
+				}
+			case EXIT:
+				{
+				endMainLoop = true;
+				break;
+				}
 			default:
+				{
 				system("cls");
 				drawBar();
 				cout << "You typed something in wrong" << endl;
 				drawBar();
 				Sleep(500);
 				break;
+				}
 			}
 		}
 	//else
